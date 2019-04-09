@@ -16,40 +16,40 @@
         <input type="submit" value="Submit"/>
     </form>
     <!--2번-->
-    <form method = "POST">
-        {% csrf_token %}
-        {{ form.title }}
-        {{ form.content }}
+    <!--<form method = "POST">-->
+    <!--    {% csrf_token %}-->
+    <!--    {{ form.title }}-->
+    <!--    {{ form.content }}-->
         
-        <input type="submit" value="Submit"/>
-    </form>
+    <!--    <input type="submit" value="Submit"/>-->
+    <!--</form>-->
     <!--3번-->
-    <form method = "POST">
-        {% csrf_token %}
-        {% for field in form %}
-            {{ field.errors }}
-            {{ field.label_tag }} {{ field }}
+    <!--<form method = "POST">-->
+    <!--    {% csrf_token %}-->
+    <!--    {% for field in form %}-->
+    <!--        {{ field.errors }}-->
+    <!--        {{ field.label_tag }} {{ field }}-->
         
-        {% endfor %}
+    <!--    {% endfor %}-->
 
         
-        <input type="submit" value="Submit"/>
-    </form>
+    <!--    <input type="submit" value="Submit"/>-->
+    <!--</form>-->
     
     <!--4번-->
-    <form method = "POST">
-        {% csrf_token %}
-        <div>
-            {{ form.title.errors }}
-            {{ form.title.label_tag }}
-            {{ form.title }}
-        </div>
+    <!--<form method = "POST">-->
+    <!--    {% csrf_token %}-->
+    <!--    <div>-->
+    <!--        {{ form.title.errors }}-->
+    <!--        {{ form.title.label_tag }}-->
+    <!--        {{ form.title }}-->
+    <!--    </div>-->
         
-        <input type="submit" value="Submit"/>
-    </form>
+    <!--    <input type="submit" value="Submit"/>-->
+    <!--</form>-->
     
     <!--5번-->
-    {% crispy form %}    
+    <!--{% crispy form %}    -->
     
 {% if request.resolver_match.url_name == 'create' %}
     <a href="{% url 'boards:index' %}">BACK</a>
