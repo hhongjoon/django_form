@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Board
 from .forms import BoardForm
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 def index(request):
     boards = Board.objects.order_by('-pk')
@@ -9,7 +10,8 @@ def index(request):
         
     }
     return render(request,'boards/index.html', context)
-    
+
+@login_required    
 def create(request):
     if request.method == 'POST':
         # 이 처리과정은 'binding'으로 불리는데, 폼의 유효성 체크를 할 수 있도록 해준다.
@@ -47,7 +49,7 @@ def delete(request, board_pk):
         return redirect('boards:index')
     else:
         return redirect('board:detail', board.pk)
-        
+@login_required         
 def update(request, board_pk):
     board = get_object_or_404(Board, pk=board_pk)
     if request.method =='POST':
