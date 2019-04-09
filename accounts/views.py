@@ -12,8 +12,6 @@ def signup(request):
     if request.user.is_authenticated:   # 로그인 상태 확인 user.is_authenticated
         return redirect('boards:index')
     
-    
-    
     if request.method == 'POST':  #  회원가입 했을 때
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -25,7 +23,7 @@ def signup(request):
         form = UserCreationForm()
         # 폼만 가져온다.
     context = { 'form': form }
-    return render(request, 'accounts/signup.html', context)
+    return render(request, 'accounts/auth_form.html', context)
 
 def login(request):
     if request.user.is_authenticated:
@@ -68,7 +66,7 @@ def edit(request):
     else:
         form = UserCustomChangeForm(instance=request.user)
     context = {'form':form}
-    return render(request,'accounts/edit.html', context)
+    return render(request,'accounts/auth_form.html', context)
 
 def change_password(request):
     if request.method == 'POST':
@@ -81,4 +79,4 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     context = {'form': form,}
-    return render(request, 'accounts/change_password.html', context)
+    return render(request, 'accounts/auth_form.html', context)

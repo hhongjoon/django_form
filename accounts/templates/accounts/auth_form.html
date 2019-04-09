@@ -10,6 +10,8 @@
     <h1>비밀번호 변경</h1>
 {% endif %}
 
+{% endif %}
+
 <form action="" method="POST">
     {% csrf_token %}
     {{ form | crispy }}
