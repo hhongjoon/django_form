@@ -1,13 +1,22 @@
 from django.shortcuts import render, redirect, get_object_or_404
+
+# import hashlib # 암호화시켜줌
+
 from .models import Board
 from .forms import BoardForm
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 def index(request):
+    
+    # if request.user.is_authenticated:
+    #     gravatar_url = hashlib.md5(request.user.email.strip().lower().encode('utf-8')).hexdigest()   # 이메일 넘기는 방법, 문서에 나와있음
+    # else:
+    #     gravatar_url = None
+        
     boards = Board.objects.order_by('-pk')
     context={
-        'boards':boards
-        
+        'boards':boards,
+        # 'gravatar_url':gravatar_url,
     }
     return render(request,'boards/index.html', context)
 

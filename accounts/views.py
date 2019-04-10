@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import update_session_auth_hash
 
-from .forms import UserCustomChangeForm
+from .forms import UserCustomChangeForm, UserCustomCreationForm
 
 # Create your views here.
 
@@ -13,14 +13,14 @@ def signup(request):
         return redirect('boards:index')
     
     if request.method == 'POST':  #  회원가입 했을 때
-        form = UserCreationForm(request.POST)
+        form = UserCustomChangeForm(request.POST)
         if form.is_valid():
             user = form.save()  # 폼을 저장하고
             auth_login(request, user)   #  로그인함수를 통해 로그인 바로 진행 -> 로그인 상태로 index로
             return redirect('boards:index')  ## 로그인이 된상태로 넘어간다.
         
     else:
-        form = UserCreationForm()
+        form = UserCustomCreationForm()
         # 폼만 가져온다.
     context = { 'form': form }
     return render(request, 'accounts/auth_form.html', context)
