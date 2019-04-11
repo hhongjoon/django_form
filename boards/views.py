@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect, get_object_or_404
-
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
+from django.views.decorators.http import require_POST
 # import hashlib # 암호화시켜줌
 
-from .models import Board
-from .forms import BoardForm
+from .models import Board, Comment
+from .forms import BoardForm, CommentForm
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 def index(request):
@@ -12,10 +12,13 @@ def index(request):
     #     gravatar_url = hashlib.md5(request.user.email.strip().lower().encode('utf-8')).hexdigest()   # 이메일 넘기는 방법, 문서에 나와있음
     # else:
     #     gravatar_url = None
-        
-    boards = Board.objects.order_by('-pk')
+    boards = get_list_or_404(Board.objects.order_by('-pk'))
+    # boards = Board.objects.order_by('-pk')
+    
+    
     context={
         'boards':boards,
+        
         # 'gravatar_url':gravatar_url,
     }
     return render(request,'boards/index.html', context)
@@ -53,8 +56,12 @@ def create(request):
 def detail(request, board_pk):
     # board = Board.objects.get(pk=board_pk)
     board = get_object_or_404(Board, pk=board_pk)
+    # comments = Comment.objects.filter(board=board_pk).all()
+    form = CommentForm()
     context={
-        'board':board
+        'board':board,
+        # 'comments':comments,
+        'form':form,
     }
     return render(request, 'boards/detail.html', context)
 
@@ -100,3 +107,28 @@ def update(request, board_pk):
                 'board':board,
     }
     return render(request, 'boards/form.html', context)
+
+@require_POST # get 방식은 들어오지 못함
+@login_required
+def comment_create(request, board_pk):
+    # if request.user.is_authenticated:   # 위에 데코해서 없어도 됨
+        
+    form = CommentForm(request.POST)
+    if request.method == 'POST':
+        if form.is_valid():
+            
+            comment = form.save(commit=False)
+            comment.user = request.user # 객체 자체를 넣어준다.
+            comment.board_id = board_pk
+            comment.save()
+                
+    return redirect('boards:detail',board_pk)
+
+@require_POST
+@login_required
+def comment_delete(request, board_pk, comment_pk):
+    comment = get_object_or_404(Comment, pk=comment_pk, board_id = board_pk)
+    
+    if request.user == comment.user:
+        comment.delete()
+    return redirect('boards:detail', board_pk)

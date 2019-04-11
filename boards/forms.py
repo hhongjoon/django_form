@@ -1,7 +1,7 @@
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
-from .models import Board
+from .models import Board, Comment
 # class BoardForm(forms.Form):   ## 클래소 form 이걸로 
 #     title = forms.CharField(label="제목",widget=forms.TextInput(attrs={
 #                                                         'placeholder':'THE TITLE!!'
@@ -45,7 +45,12 @@ class BoardForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'POST'
         self.helper.add_input(Submit('submit','작성!'))
-                                                
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields=['content',]
+        
                             
             
             

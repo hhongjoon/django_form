@@ -13,17 +13,42 @@
 <body>
     <div class="container">
     {% if user.is_authenticated %}
-        <h1>
-            <img src="https://s.gravatar.com/avatar/{{ user.email | makemd5 }}?s=80" alt="profile img"></img>
-            안녕, {{ user.username }}
-            <a href="{% url 'accounts:edit' %}">회원 수정</a>
-            
-            <a href="{% url 'accounts:logout' %}">로그아웃</a>
-            <form action= "{% url 'accounts:delete' %}" method = "POST" style = "display: inline" onsubmit = "return confirm('R U SURE??');">
-                {% csrf_token %}
-                <input type="submit" value="탈퇴"/>
+        <nav class="navbar navbar-expand-lg navbar-light bg-danger">
+          <a class="navbar-brand" href="#">Navbar</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-item nav-link active" href="{% url 'accounts:edit' %}">회원수정 <span class="sr-only">(current)</span></a>
+              <a class="nav-item nav-link active" href="{% url 'accounts:logout' %}">로그아웃</a>
+              <a class="nav-item nav-link">
+                  <form action= "{% url 'accounts:delete' %}" method = "POST" style = "display: inline" onsubmit = "return confirm('R U SURE??');">
+                    {% csrf_token %}
+                    
+                    <input type="submit" value="탈퇴"/>
             </form>
+                  
+                  
+              </a>
+              
+            </div>
+          </div>
+        </nav>
+    
+    
+    
+    
+    <div style="text-align:center">
+        <h1>
+            <img src="https://s.gravatar.com/avatar/{{ user.email | makemd5 }}?s=120" class="rounded-circle" alt="profile img"></img>
+                안녕, {{ user.username }}
         </h1>
+    </div>
+        
+            
+            
+        
     {% else %}
     
         <a href="{% url 'accounts:login' %}">login</a>

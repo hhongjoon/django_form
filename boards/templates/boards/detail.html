@@ -1,5 +1,7 @@
 {% extends 'boards/base.html' %}
+
 {% block body %}
+{% load crispy_forms_tags %}
 <h1>{{ board.pk }} 글</h1>
 <h2>{{ board.title }}</h2>
 <hr>
@@ -14,6 +16,38 @@
         
     </form>
 <a href="{% url 'boards:update' board.pk %}">수정</a>
+{% endif %}
+<hr>
+
+<!--댓글 출력-->
+<!--for comment in comments    쿼리가 돈다. not good    --> 
+{% for comment in board.comment_set.all %}
+<!-- 1: N 에서 쿼리문 덜 돌게 하는 방법 -->
+
+    <p>댓글작성자 : {{ comment.user }}</p>
+    <p>내용 : {{ comment.content }}</p>
+    
+    <!--삭제버튼-->
+    {% if comment.user == request.user %}
+        <form action="{% url 'boards:comment_delete' board.pk comment.pk %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="삭제"/>
+        </form>
+    {% endif %}
+    <hr>
+{% endfor %}
+
+
+<!--댓글입력창-->
+{% if user.is_authenticated %}
+    <form action="{% url 'boards:comment_create' board.pk %}" method="POST">
+        {% csrf_token %}
+        {{ form | crispy }}
+        <input type="submit" name="new_comment"/>
+    </form>
+{% else %}
+    <a href="{% url 'accounts:login' %}">댓글을 작성하려면 로그인하시오</a>
+
 {% endif %}
 
 

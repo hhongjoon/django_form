@@ -1,10 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_list_or_404, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.contrib.auth import update_session_auth_hash
-
+from django.contrib.auth import update_session_auth_hash, get_user_model
+from boards.models import Board, Comment
 from .forms import UserCustomChangeForm, UserCustomCreationForm
+
+from django.conf import settings
 
 # Create your views here.
 
@@ -80,3 +82,29 @@ def change_password(request):
         form = PasswordChangeForm(request.user)
     context = {'form': form,}
     return render(request, 'accounts/auth_form.html', context)
+    
+def profile(request, board_user_pk):
+    #####################################
+    # user 하나만 가져오면 된다.
+    user_info = get_object_or_404(get_user_model(), pk=board_user_pk)
+    context = {
+        'user_info': user_info
+    }
+    return render(request,'accounts/profile.html',context)    
+    
+    
+    
+    
+    #####################################
+    # comments = get_list_or_404(Comment, user_id=board_user_pk)
+    # boards = get_list_or_404(Board, user_id=board_user_pk)
+    # User = get_user_model()
+    # print(type(User))
+    # board_user = get_object_or_404(User, id = board_user_pk)
+    # context={
+    #     'comments' : comments,
+    #     'boards': boards,
+    #     'board_user':board_user,
+        
+    # }
+    # return render(request,'accounts/profile.html',context)

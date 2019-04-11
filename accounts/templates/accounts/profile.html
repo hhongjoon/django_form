@@ -1,0 +1,94 @@
+{% extends 'accounts/base.html' %}
+{% block body %}
+{% load gravatar %}
+    <div class="container">
+    
+        <nav class="navbar navbar-expand-lg navbar-light bg-danger">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1200px-Instagram_logo_2016.svg.png" width="35px" height="35px"></img>
+          <a class="navbar-brand  text-white" href="{% url 'boards:index' %}">INSTAGRAM_RED</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          {% if request.user.is_authenticated %}
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+              <a class="nav-item nav-link active text-white" href="{% url 'accounts:edit' %}">회원수정 <span class="sr-only">(current)</span></a>
+              <a class="nav-item nav-link active text-white" href="{% url 'accounts:logout' %}">로그아웃</a>
+              <a class="nav-item nav-link">
+            <form action= "{% url 'accounts:delete' %}" method = "POST" style = "display: inline" onsubmit = "return confirm('R U SURE??');">
+                {% csrf_token %}
+                <input class="btn btn-danger" type="submit" value="탈퇴">
+                    
+            </form>
+                          </a>
+                          
+          </div>
+          {% endif %}
+    </div>
+    <br>
+    <div class="" style="text-align:center">
+        
+            <h1>
+            <img src="https://s.gravatar.com/avatar/{{ user_info.email | makemd5 }}?s=120" class="rounded-circle" alt="profile img"></img>
+                {{ user_info.username }} 의 프로필
+        </h1>
+            
+        
+        
+    </div>
+
+    
+    {% if user == user_info %}
+        <h6 class="text-right">
+            <a href="{% url 'accounts:edit' %}">회원 수정</a>
+            <a href="{% url 'accounts:logout' %}">로그아웃</a>
+            <form action= "{% url 'accounts:delete' %}" method = "POST" style = "display: inline" onsubmit = "return confirm('R U SURE??');">
+                {% csrf_token %}
+                <input type="submit" value="탈퇴"/>
+                
+            </form>
+        </h6>
+    
+    
+    {% endif %}
+    
+    
+    <h2 class = "text-center"><span class="badge badge-danger">{{ user_info.username }} 가 작성한 게시글</span></h2>
+
+    <br>
+    
+    <div class="row">
+    {% for board in user_info.board_set.all %}
+        <div class="col-4">
+                
+            <div class="card border border-danger" style="width: 18rem;">
+              <div class="card-body">
+                  <img class="card-img-top" src="https://t1.daumcdn.net/cfile/tistory/1671CB4C4E7A285203" alt="Card image cap">
+                  
+                  
+                  
+                <h5 class="card-title"><b>{{ board.title }}</b></h5>
+                <h6 class="card-subtitle mb-2 text-muted"><a href="{% url 'accounts:profile' board.user.pk %}"><b>작성 : {{ board.user }}</b></a></h6>
+                <h6 class="card-text">{{ board.content }}</h6>
+                
+                <h6>달린 댓글 수 : {{ board.comment_set.all.count }}</h6>
+                <a href="{% url 'boards:detail' board.pk %}">글 보러가기</a>
+              </div>
+            </div>
+    
+        </div>
+        
+    {% endfor %}
+    </div>
+    
+
+    <hr>
+    <h2>작성댓글</h2>
+    {% for comment in user_info.comment_set.all %}
+        
+        <div>{{ comment.content }}  - <a href="{% url 'boards:detail' comment.board.pk%}">{{ comment.board.title }}</a>        </div>
+        
+        
+    {% endfor %}
+
+
+{% endblock %}
